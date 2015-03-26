@@ -24,7 +24,11 @@ setup(
     ],
     entry_points='''
         [ckan.plugins]
-        # Add plugins here, e.g.
-        torrent = ckanext.torrent.plugin:TorrentPlugin
+        torrent = ckanext.torrent.plugin:TorrentPlugin  
+        [paste.paster_command]
+        torrent-cmd = ckanext.torrent.torrent_cmd:TorrentCmd
+        [ckan.celery_task]
+        tasks = ckanext.torrent.celery_import:task_imports
+        
     ''',
 )
