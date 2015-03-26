@@ -1,0 +1,12 @@
+{% ckan_extends %}
+{% block resource_item_explore_links %}
+{{ super() }}
+{% if res.url_type=='upload' %}
+<li>
+<a href="{{ h.url_for(controller='ckanext.torrent.torrent:TorrentController', action='download', id=res.id) }}" class="resource-url-analytics" target="_blank">
+<i class="icon-download"></i>
+{{ _('Download torrent') }}
+</a>
+</li>
+{% endif %}
+{% endblock %}

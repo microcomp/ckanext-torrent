@@ -23,10 +23,18 @@ class TorrentPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     plugins.implements(plugins.IResourceUrlChange)
     plugins.implements(plugins.IRoutes, inherit=True)
-        
+    plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.ITemplateHelpers, inherit=False)
+    
     def before_map(self, map):
         map.connect('torrents_download','/torrents/download/{id}', action='download', controller='ckanext.torrent.torrent:TorrentController')
         return map
+    
+    def update_config(self, config):
+        toolkit.add_template_directory(config, 'templates')
+    
+    def get_helpers(self):
+        return {}
     
     def notify(self, entity, operation=None):
         log.warn("notify")
@@ -45,7 +53,7 @@ class TorrentPlugin(plugins.SingletonPlugin):
             # get when you change the URL field. Note that once this occurs, in tasks.py
             # it will update the resource with the new cache_url, that will cause a
             # 'change resource' notification, which we need to ignore here.
-            if operation == model.DomainObjectOperation.new and entity.resource_type == 'upload':
+            if operation == model.DomainObjectOperation.new and entity.url_type == 'upload':
                 self._create_torrent_task(entity)
             else:
                 log.debug('Ignoring resource event because operation is: %s', operation)

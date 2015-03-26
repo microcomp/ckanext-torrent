@@ -22,13 +22,13 @@ def create_torrent_file(resource_path, torrent_storage_path, resource_id):
         os.makedirs(torrent_storage_path)
     resource_id += '.torrent'
     output_path = os.path.join(torrent_storage_path, resource_id)
-    #with open(output_path, 'w') as fout:
-    #    fout.write('test')
-    response = subprocess.check_call(["transmission-create", "-o", output_path, resource_path])
-    log.info(response)
-    #response = subprocess.check_call(["touch", output_path,])
-    #log.info(response)
-    return 1
+    try:
+        status = subprocess.check_call(["transmission-create", "-o", output_path, resource_path])
+        return status
+    except subprocess.CalledProcessError as e:
+        log.exception(e)
+        return -1
+
 
 def create_torrent_file_all():
     storage_path = config.get('ckan.storage_path','')
@@ -37,9 +37,9 @@ def create_torrent_file_all():
     if not torrent_storage_path:
         torrent_storage_path = storage_path + '/torrents'
     result = toolkit.get_action('current_package_list_with_resources')(data_dict={})
-    #log.info('packages with resources: %s', result)
     resource_counter = 0
     resource_upload_counter = 0
+    resource_success_counter = 0
     for dataset in result:
         for resource in dataset['resources']:
             resource_counter+=1
@@ -47,7 +47,9 @@ def create_torrent_file_all():
                 resource_upload_counter +=1
                 log.info('resource id: %s', resource['id'])
                 resource_path = get_path(storage_path, resource['id'])
-                create_torrent_file(resource_path, torrent_storage_path, resource['id'])
-                
+                status = create_torrent_file(resource_path, torrent_storage_path, resource['id'])
+                if status==0:
+                    resource_success_counter+=1            
     log.info('available resources: %d', resource_counter)
-    log.info('available resources uploaded: %d', resource_upload_counter)
+    log.info('available uploaded resources : %d', resource_upload_counter)
+    log.info('torrents created : %d', resource_success_counter)
