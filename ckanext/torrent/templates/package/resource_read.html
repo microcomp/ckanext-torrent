@@ -2,7 +2,7 @@
 
 {% block resource_actions_inner %}
 {{ super() }}
-{% if res.url  and res.url_type=='upload' %}
+{% if h.torrent_for_resource(res.id) %}
 <li>
 <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{  h.url_for(controller='ckanext.torrent.torrent:TorrentController', action='download', id=res.id) }}">
 <i class="icon-download"></i> {{ _('Download torrent') }}

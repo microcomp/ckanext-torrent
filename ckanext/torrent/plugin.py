@@ -19,6 +19,18 @@ def get_path(storage_path, id):
     filepath = os.path.join(directory, id[6:])
     return filepath
 
+def check_torrent_for_resource(resource_id):
+    torrent_name = resource_id + '.torrent'
+    torrent_storage_path = config.get('ckan.torrent_storage_path','')
+    if not torrent_storage_path:
+        storage_path = config.get('ckan.storage_path','')
+        storage_path = os.path.join(storage_path, 'resources')
+        torrent_storage_path = os.path.join(storage_path, 'torrents')
+    torrent_file_path = os.path.join(torrent_storage_path, torrent_name)
+    if os.path.isfile(torrent_file_path):
+        return True
+    return False
+
 class TorrentPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     plugins.implements(plugins.IResourceUrlChange)
@@ -34,7 +46,7 @@ class TorrentPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates')
     
     def get_helpers(self):
-        return {}
+        return {'torrent_for_resource' : check_torrent_for_resource}
     
     def notify(self, entity, operation=None):
         log.warn("notify")
