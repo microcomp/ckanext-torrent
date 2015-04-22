@@ -20,6 +20,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'celery'
         # -*- Extra requirements: -*-
     ],
     entry_points='''
@@ -29,6 +30,5 @@ setup(
         torrent-cmd = ckanext.torrent.torrent_cmd:TorrentCmd
         [ckan.celery_task]
         tasks = ckanext.torrent.celery_import:task_imports
-        
     ''',
 )

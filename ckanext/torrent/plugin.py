@@ -49,11 +49,9 @@ class TorrentPlugin(plugins.SingletonPlugin):
         return {'torrent_for_resource' : check_torrent_for_resource}
     
     def notify(self, entity, operation=None):
-        log.warn("notify")
         self._notify(entity, operation)
     
     def notify_after_commit(self, entity, operation=None):
-        log.warn("notify_after_commit")
         self._notify(entity, operation)
         
     def _notify(self, entity, operation):
@@ -77,6 +75,9 @@ class TorrentPlugin(plugins.SingletonPlugin):
     def _create_torrent_task(self, resource):
         log.info("resource attrs: %s", dir(resource))
         log.info("resource id: %s", resource.id)
+        tracker_url = config.get('ckan.torrent_tracker_url', '')
+        if not tracker_url:
+            return None
         storage_path = config.get('ckan.storage_path','')
         storage_path = os.path.join(storage_path, 'resources')
         resource_path = get_path(storage_path, resource.id)
@@ -84,4 +85,4 @@ class TorrentPlugin(plugins.SingletonPlugin):
         torrent_storage_path = config.get('ckan.torrent_storage_path','')
         if not torrent_storage_path:
             torrent_storage_path = storage_path + '/torrents'
-        celery.send_task("torrent.create", args=[resource_path, torrent_storage_path, resource.id], countdown=10, task_id=str(uuid.uuid4()))    
+        celery.send_task("torrent.create", args=[resource_path, torrent_storage_path, resource.id, tracker_url], countdown=10, task_id=str(uuid.uuid4()))    
