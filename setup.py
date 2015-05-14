@@ -30,5 +30,7 @@ setup(
         torrent-cmd = ckanext.torrent.torrent_cmd:TorrentCmd
         [ckan.celery_task]
         tasks = ckanext.torrent.celery_import:task_imports
+        [babel.extractors]
+        ckan = ckan.lib.extract:extract_ckan
     ''',
 )
