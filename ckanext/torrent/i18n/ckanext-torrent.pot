@@ -1,0 +1,29 @@
+# Translations template for ckanext-torrent.
+# Copyright (C) 2015 ORGANIZATION
+# This file is distributed under the same license as the ckanext-torrent
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ckanext-torrent 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2015-05-14 08:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ckanext/torrent/torrent.py:34
+msgid "Resource not found"
+msgstr ""
+
+#: ckanext/torrent/templates/package/resource_read.html:8
+#: ckanext/torrent/templates/package/snippets/resource_item.html:8
+msgid "Download torrent"
+msgstr ""
+

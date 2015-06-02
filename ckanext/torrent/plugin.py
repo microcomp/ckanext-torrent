@@ -20,7 +20,7 @@ def get_path(storage_path, id):
     return filepath
 
 def check_torrent_for_resource(resource_id):
-    torrent_name = resource_id + '.torrent'
+    torrent_name = resource_id + '.torrent.added'
     torrent_storage_path = config.get('ckan.torrent_storage_path','')
     if not torrent_storage_path:
         storage_path = config.get('ckan.storage_path','')
@@ -83,6 +83,9 @@ class TorrentPlugin(plugins.SingletonPlugin):
         resource_path = get_path(storage_path, resource.id)
         log.info('resource path %s', resource_path)
         torrent_storage_path = config.get('ckan.torrent_storage_path','')
+        payload_storage_path = config.get('ckan.torrent_payload_storage_path', '')
         if not torrent_storage_path:
-            torrent_storage_path = storage_path + '/torrents'
-        celery.send_task("torrent.create", args=[resource_path, torrent_storage_path, resource.id, tracker_url], countdown=10, task_id=str(uuid.uuid4()))    
+            torrent_storage_path = os.path.join(storage_path,'torrents')
+        if not payload_storage_path:
+            payload_storage_path = os.path.join(storage_path,'payload')
+        celery.send_task("torrent.create", args=[resource_path, torrent_storage_path, payload_storage_path,resource.id, tracker_url], countdown=10, task_id=str(uuid.uuid4()))    

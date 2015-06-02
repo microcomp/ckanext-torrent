@@ -14,7 +14,7 @@ log = logging.getLogger('ckanext')
 
 class TorrentController(base.BaseController):
     def download(self, id):
-        torrent_name = id + '.torrent'
+        torrent_name = id + '.torrent.added'
         torrent_storage_path = config.get('ckan.torrent_storage_path','')
         if not torrent_storage_path:
             storage_path = config.get('ckan.storage_path','')
@@ -23,7 +23,7 @@ class TorrentController(base.BaseController):
         torrent_file_path = os.path.join(torrent_storage_path, torrent_name)
         if os.path.isfile(torrent_file_path):
             file_size = os.path.getsize(torrent_file_path)
-            headers = [('Content-Disposition', 'attachment; filename=\"' + torrent_name + '\"'),
+            headers = [('Content-Disposition', 'attachment; filename=\"' + id+'.torrent' + '\"'),
                    ('Content-Type', 'text/plain'),
                    ('Content-Length', str(file_size))]
     
